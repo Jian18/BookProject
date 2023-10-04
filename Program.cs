@@ -9,13 +9,21 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
   builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddOpenApiDocument();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+
+if (app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    // Available at: http://localhost:<port>/swagger/v1/swagger.json
+    app.UseOpenApi();
+
+    // Add web UIs to interact with the document
+    // Available at: http://localhost:<port>/swagger
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
