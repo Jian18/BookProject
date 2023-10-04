@@ -59,7 +59,7 @@ namespace BookProject.Controllers
             {
                 return BadRequest();
             }
-
+        
             _context.Entry(book).State = EntityState.Modified;
 
             try
@@ -90,7 +90,8 @@ namespace BookProject.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Books'  is null.");
           }
-            _context.Books.Add(book);
+         // var newBook = new Book() { ISBN =0,Title=book.Title,Genre=book.Genre,Description=book.Description,AuthorId=book.AuthorId}; 
+              _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBook", new { id = book.ISBN }, book);
