@@ -7,6 +7,6 @@
 
         public string LastName { get; set; }= string.Empty;
 
-        public ICollection<Book> Books { get; } = new List<Book>();
+       // public ICollection<Book> Books { get; } = new List<Book>();
     }
 }
