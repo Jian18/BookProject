@@ -14,9 +14,9 @@ namespace BookProject.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly BookyDbContext _context;
 
-        public BooksController(ApplicationDbContext context)
+        public BooksController(BookyDbContext context)
         {
             _context = context;
         }
@@ -49,6 +49,17 @@ namespace BookProject.Controllers
 
             return book;
         }
+
+    //GET: api/Test/
+    [HttpGet("/Test")]
+    public IEnumerable<Book> GetTestBooks()
+    {
+      return _context.Books.Include(b =>b.Author).ToList();    }
+
+
+
+
+
 
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

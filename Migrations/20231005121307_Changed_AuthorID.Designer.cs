@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookProject.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231004114626_Add_more_data")]
-    partial class Add_more_data
+    [DbContext(typeof(BookyDbContext))]
+    [Migration("20231005121307_Changed_AuthorID")]
+    partial class Changed_AuthorID
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,11 @@ namespace BookProject.Migrations
 
             modelBuilder.Entity("BookProject.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"));
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -40,26 +40,26 @@ namespace BookProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AuthorId");
 
                     b.ToTable("Authors");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            AuthorId = 1,
                             FirstName = "Greg",
                             LastName = "Martin"
                         },
                         new
                         {
-                            Id = 2,
+                            AuthorId = 2,
                             FirstName = "John",
                             LastName = "Doe"
                         },
                         new
                         {
-                            Id = 3,
+                            AuthorId = 3,
                             FirstName = "Nima",
                             LastName = "Hariku"
                         });
@@ -67,11 +67,11 @@ namespace BookProject.Migrations
 
             modelBuilder.Entity("BookProject.Entities.Book", b =>
                 {
-                    b.Property<long>("ISBN")
+                    b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ISBN"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookId"));
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -84,11 +84,14 @@ namespace BookProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("ISBN")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ISBN");
+                    b.HasKey("BookId");
 
                     b.HasIndex("AuthorId");
 
@@ -97,37 +100,42 @@ namespace BookProject.Migrations
                     b.HasData(
                         new
                         {
-                            ISBN = 1L,
+                            BookId = 1,
                             AuthorId = 1,
                             Description = "Lorem ipsum",
                             Genre = "Science Fiction",
+                            ISBN = 1111111111L,
                             Title = "On the way"
                         },
                         new
                         {
-                            ISBN = 2L,
+                            BookId = 2,
                             AuthorId = 1,
                             Description = "Lorem ipsum",
                             Genre = "Science Fiction",
+                            ISBN = 2222222222L,
                             Title = "On the way2"
                         },
                         new
                         {
-                            ISBN = 3L,
+                            BookId = 3,
                             AuthorId = 2,
                             Description = "Lorem ipsum",
                             Genre = "Science Fiction",
+                            ISBN = 3333333333L,
                             Title = "On the way3"
                         });
                 });
 
             modelBuilder.Entity("BookProject.Entities.Book", b =>
                 {
-                    b.HasOne("BookProject.Entities.Author", null)
+                    b.HasOne("BookProject.Entities.Author", "Author")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("BookProject.Entities.Author", b =>
