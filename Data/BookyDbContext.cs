@@ -41,7 +41,7 @@ namespace BookProject.Data
 					new Book()
 					{
 						BookId = 1,
-						ISBN =1111111111,
+						Isbn =1111111111,
 						Title = "On the way",
 						Genre = "Science Fiction",
 						Description = "Lorem ipsum",
@@ -50,7 +50,7 @@ namespace BookProject.Data
 					new Book()
 					{
 						BookId= 2,
-						ISBN =2222222222,
+						Isbn =2222222222,
 						Title = "On the way2",
 						Genre = "Science Fiction",
 						Description = "Lorem ipsum",
@@ -59,7 +59,7 @@ namespace BookProject.Data
 					new Book()
 					{
 						BookId = 3,
-						ISBN =3333333333,
+						Isbn =3333333333,
 						Title = "On the way3",
 						Genre = "Science Fiction",
 						Description = "Lorem ipsum",
