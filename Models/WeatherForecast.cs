@@ -1,4 +1,4 @@
-namespace BookProject
+namespace BookProject.Models
 {
     public class WeatherForecast
     {

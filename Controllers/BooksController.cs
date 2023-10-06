@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookProject.Data;
 using BookProject.Entities;
+using BookProject.Models;
 
 namespace BookProject.Controllers
 {
@@ -23,23 +19,31 @@ namespace BookProject.Controllers
 
         // GET: api/Books
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookResponse>>> GetBooks()
         {
-          if (_context.Books == null)
-          {
-              return NotFound();
-          }
-            return await _context.Books.ToListAsync();
+            if (_context.Books == null)
+            {
+                return NotFound();
+            }
+            return Ok(await _context.Books
+                .Select(b => new BookResponse
+                {
+                    Isbn = b.Isbn,
+                    Title = b.Title,
+                    Genre = b.Genre,
+                    Description = b.Description
+                })
+                .ToListAsync());
         }
 
         // GET: api/Books/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBook(long id)
+        public async Task<ActionResult<BookResponse>> GetBook(int id)
         {
-          if (_context.Books == null)
-          {
-              return NotFound();
-          }
+            if (_context.Books == null)
+            {
+                return NotFound();
+            }
             var book = await _context.Books.FindAsync(id);
 
             if (book == null)
@@ -47,30 +51,42 @@ namespace BookProject.Controllers
                 return NotFound();
             }
 
-            return book;
+            return Ok(new BookResponse
+            {
+                Isbn = book.Isbn,
+                Title = book.Title,
+                Genre = book.Genre,
+                Description = book.Description
+            });
         }
 
-    //GET: api/Test/
-    [HttpGet("/Test")]
-    public IEnumerable<Book> GetTestBooks()
-    {
-      return _context.Books.Include(b =>b.Author).ToList();    }
-
-
-
-
-
+        //GET: api/Test/
+        [HttpGet("/Test")]
+        public async Task<ActionResult<IEnumerable<BookAuthorResponse>>> GetTestBooks()
+        {
+            return Ok(await _context.Books
+                .Select(b => new BookAuthorResponse
+                {
+                    Isbn = b.Isbn,
+                    Title = b.Title,
+                    Genre = b.Genre,
+                    Description = b.Description,
+                    FirstName = b.Author.FirstName,
+                    LastName = b.Author.LastName,
+                })                
+                .ToListAsync());
+        }
 
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(long id, Book book)
+        public async Task<IActionResult> PutBook(int id, Book book)
         {
-            if (id != book.ISBN)
+            if (id != book.Isbn)
             {
                 return BadRequest();
             }
-        
+
             _context.Entry(book).State = EntityState.Modified;
 
             try
@@ -97,20 +113,20 @@ namespace BookProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
-          if (_context.Books == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Books'  is null.");
-          }
-         // var newBook = new Book() { ISBN =0,Title=book.Title,Genre=book.Genre,Description=book.Description,AuthorId=book.AuthorId}; 
-              _context.Books.Add(book);
+            if (_context.Books == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Books'  is null.");
+            }
+            // var newBook = new Book() { ISBN =0,Title=book.Title,Genre=book.Genre,Description=book.Description,AuthorId=book.AuthorId}; 
+            _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBook", new { id = book.ISBN }, book);
+            return CreatedAtAction("GetBook", new { id = book.Isbn }, book);
         }
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(long id)
+        public async Task<IActionResult> DeleteBook(int id)
         {
             if (_context.Books == null)
             {
@@ -128,9 +144,9 @@ namespace BookProject.Controllers
             return NoContent();
         }
 
-        private bool BookExists(long id)
+        private bool BookExists(int id)
         {
-            return (_context.Books?.Any(e => e.ISBN == id)).GetValueOrDefault();
+            return (_context.Books?.Any(e => e.Isbn == id)).GetValueOrDefault();
         }
     }
 }

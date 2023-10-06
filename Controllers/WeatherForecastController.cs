@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookProject.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookProject.Controllers
 {
