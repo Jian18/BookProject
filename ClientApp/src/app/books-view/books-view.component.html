@@ -1,0 +1,10 @@
+<div class="row">
+    <ul>
+      <div *ngFor="let b of bookStore.books">
+        <h1>Title: {{ b.title}} </h1>
+        <p>description:  {{b.description}}</p>
+        <p>Prijs: ${{ b.isbn}}</p>
+        <p>genre: {{ b.genre}}</p>
+      </div>
+    </ul>
+</div>
